@@ -62,11 +62,11 @@
             background-color: #f3e8ff; /* Purple 100 */
             border: 1px solid #d8b4fe; /* Purple 300 */
             color: #581c87; /* Purple 900 */
-            padding: 6px 10px;
+            padding: 4px 8px; /* Slightly smaller for compact view */
             border-radius: 6px;
-            margin: 3px;
+            margin: 2px;
             display: inline-block;
-            font-size: 0.9em;
+            font-size: 0.85em;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
@@ -74,10 +74,10 @@
             background-color: #ccfbf1; /* Teal 100 */
             border: 1px solid #5eead4; /* Teal 300 */
             color: #115e59; /* Teal 900 */
-            padding: 4px 10px;
+            padding: 2px 8px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 0.85em;
             display: inline-block;
             margin: 0 4px;
         }
@@ -91,23 +91,24 @@
             .activity-header { font-size: 18px; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 10px; }
             p { font-size: 12pt; }
             .phrase-pill, .vocab-pill { border: 1px solid #666; background: none; color: black; }
+            #worksheet-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
     <!-- Navbar / Controls -->
-    <nav class="bg-slate-800 text-white p-4 shadow-lg sticky top-0 z-50 no-print">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <nav class="bg-slate-800 text-white p-3 shadow-lg sticky top-0 z-50 no-print">
+        <div class="max-w-full mx-auto flex justify-between items-center px-4">
             <div class="flex items-center gap-3">
-                <i class="fa-solid fa-pen-nib text-2xl text-yellow-400"></i>
-                <h1 class="text-2xl font-bold tracking-tight">Narrative Builder <span class="text-slate-400 text-lg font-normal">| Advanced (Y7/8)</span></h1>
+                <i class="fa-solid fa-pen-nib text-xl text-yellow-400"></i>
+                <h1 class="text-xl font-bold tracking-tight">Narrative Builder <span class="text-slate-400 text-base font-normal">| Advanced (Y7/8)</span></h1>
             </div>
             <div class="flex gap-3">
-                <button onclick="generateWorksheet()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg font-semibold transition flex items-center gap-2 shadow-md">
-                    <i class="fa-solid fa-shuffle"></i> New Activity Set
+                <button onclick="generateWorksheet()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg font-semibold transition flex items-center gap-2 shadow-md text-sm">
+                    <i class="fa-solid fa-shuffle"></i> New Set
                 </button>
-                <button onclick="window.print()" class="bg-slate-600 hover:bg-slate-500 text-white px-6 py-2 rounded-lg font-semibold transition flex items-center gap-2">
+                <button onclick="window.print()" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-1.5 rounded-lg font-semibold transition flex items-center gap-2 text-sm">
                     <i class="fa-solid fa-print"></i> Print
                 </button>
             </div>
@@ -115,17 +116,16 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow p-6 md:p-10 max-w-7xl mx-auto w-full">
+    <main class="flex-grow p-4 w-full h-[calc(100vh-64px)] overflow-hidden flex flex-col justify-center">
         
-        <div id="worksheet-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Grid configured for 3x3 layout (lg:grid-cols-3) with reduced gap -->
+        <div id="worksheet-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-[1920px] mx-auto w-full h-full">
             <!-- Content injected via JS -->
         </div>
 
     </main>
 
-    <footer class="text-center p-6 text-slate-500 text-sm no-print">
-        Generated for English Classroom Use | Advanced Narrative Module
-    </footer>
+    <!-- Footer removed for screen space optimization -->
 
     <script>
         // --- DATA BANK ---
@@ -624,12 +624,12 @@
         function createCard(title, icon, contentHTML, colorClass, isFullWidth = false) {
             const widthClass = isFullWidth ? 'md:col-span-2' : '';
             return `
-                <div class="card bg-white rounded-xl shadow-lg border-l-8 ${colorClass} p-6 overflow-hidden relative ${widthClass}">
-                    <div class="activity-header flex items-center gap-3 mb-4 text-slate-700">
-                        <i class="fa-solid ${icon} text-xl"></i>
-                        <h2 class="text-xl font-bold uppercase tracking-wider">${title}</h2>
+                <div class="card bg-white rounded-xl shadow-lg border-l-8 ${colorClass} p-4 overflow-hidden relative ${widthClass} flex flex-col h-full">
+                    <div class="activity-header flex items-center gap-3 mb-2 text-slate-700">
+                        <i class="fa-solid ${icon} text-lg"></i>
+                        <h2 class="text-lg font-bold uppercase tracking-wider">${title}</h2>
                     </div>
-                    <div class="narrative-text text-xl leading-relaxed text-slate-800">
+                    <div class="narrative-text text-lg leading-relaxed text-slate-800 flex-grow flex flex-col justify-center">
                         ${contentHTML}
                     </div>
                 </div>
@@ -644,9 +644,9 @@
             const card1 = createCard(
                 "1. Variable Start", 
                 "fa-arrow-right-to-bracket",
-                `<p class="mb-2 italic text-slate-500 text-base">Rewrite this sentence to fix the repetitive opener:</p>
-                 <p class="font-bold mb-4">"${opItem.text}"</p>
-                 <p class="bg-indigo-50 p-3 rounded-lg border border-indigo-100 text-indigo-900 font-semibold text-lg">
+                `<p class="mb-1 italic text-slate-500 text-base">Rewrite this sentence to fix the repetitive opener:</p>
+                 <p class="font-bold mb-3">"${opItem.text}"</p>
+                 <p class="bg-indigo-50 p-2 rounded-lg border border-indigo-100 text-indigo-900 font-semibold text-base">
                     <i class="fa-solid fa-bullseye mr-2"></i> ${opItem.type}
                  </p>`,
                 "border-indigo-500"
@@ -657,8 +657,8 @@
             const card2 = createCard(
                 "2. Detail Expansion",
                 "fa-paintbrush",
-                `<p class="mb-2 italic text-slate-500 text-base">Add <strong class="text-emerald-600">5 adjectives</strong> to this complex sentence to create a vivid image:</p>
-                 <p class="p-4 bg-gray-50 rounded border border-gray-200">"${adjItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-base">Add <strong class="text-emerald-600">5 adjectives</strong> to this complex sentence to create a vivid image:</p>
+                 <p class="p-3 bg-gray-50 rounded border border-gray-200">"${adjItem}"</p>`,
                 "border-emerald-500"
             );
 
@@ -667,7 +667,7 @@
             const card3 = createCard(
                 "3. Wordiness Reduction",
                 "fa-scissors",
-                `<p class="mb-2 italic text-slate-500 text-base">Rewrite to remove the <span class="highlight-red">highlighted</span> functional words, using stronger verbs instead:</p>
+                `<p class="mb-1 italic text-slate-500 text-base">Rewrite to remove the <span class="highlight-red">highlighted</span> functional words, using stronger verbs instead:</p>
                  <p class="leading-loose">"${stopItem}"</p>`,
                 "border-red-500"
             );
@@ -677,8 +677,8 @@
             const card4 = createCard(
                 "4. Active Voice",
                 "fa-person-running",
-                `<p class="mb-2 italic text-slate-500 text-base">Flip this Passive sentence so the Subject performs the action:</p>
-                 <p class="p-4 bg-gray-50 rounded border border-gray-200">"${passItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-base">Flip this Passive sentence so the Subject performs the action:</p>
+                 <p class="p-3 bg-gray-50 rounded border border-gray-200">"${passItem}"</p>`,
                 "border-orange-500"
             );
 
@@ -687,7 +687,7 @@
             const card5 = createCard(
                 "5. Power Verbs",
                 "fa-bolt",
-                `<p class="mb-2 italic text-slate-500 text-base">Replace the weak <span class="highlight-yellow">highlighted verb</span> with a stronger, more specific synonym:</p>
+                `<p class="mb-1 italic text-slate-500 text-base">Replace the weak <span class="highlight-yellow">highlighted verb</span> with a stronger, more specific synonym:</p>
                  <p class="leading-loose">"${verbItem}"</p>`,
                 "border-yellow-500"
             );
@@ -697,7 +697,7 @@
             const card6 = createCard(
                 "6. Repetition Removal",
                 "fa-clone",
-                `<p class="mb-2 italic text-slate-500 text-base">Combine these sentences or use pronouns to remove the <span class="highlight-blue">repeated words</span>:</p>
+                `<p class="mb-1 italic text-slate-500 text-base">Combine these sentences or use pronouns to remove the <span class="highlight-blue">repeated words</span>:</p>
                  <p class="leading-loose">"${repItem}"</p>`,
                 "border-blue-500"
             );
@@ -713,8 +713,8 @@
             const card7 = createCard(
                 "7. Sentence Reconstruction",
                 "fa-puzzle-piece",
-                `<p class="mb-2 italic text-slate-500 text-base">Reorder these 5 phrases to form a single, coherent complex sentence:</p>
-                 <div class="p-4 bg-purple-50 rounded border border-purple-200 leading-loose">
+                `<p class="mb-1 italic text-slate-500 text-base">Reorder these 5 phrases to form a single, coherent complex sentence:</p>
+                 <div class="p-3 bg-purple-50 rounded border border-purple-200 leading-loose">
                     ${phrasesHTML}
                  </div>`,
                 "border-purple-500"
@@ -725,12 +725,12 @@
             const card8 = createCard(
                 "8. Finish the Sentence",
                 "fa-pen-fancy",
-                `<p class="mb-2 italic text-slate-500 text-base">Complete the narrative sentence started below. You must include these two words:</p>
-                 <div class="mb-3">
+                `<p class="mb-1 italic text-slate-500 text-base">Complete the narrative sentence started below. You must include these two words:</p>
+                 <div class="mb-2">
                     <span class="vocab-pill">${finishItem.words[0]}</span>
                     <span class="vocab-pill">${finishItem.words[1]}</span>
                  </div>
-                 <p class="p-4 bg-teal-50 rounded border border-teal-200 font-bold text-teal-900">"${finishItem.start}..."</p>`,
+                 <p class="p-3 bg-teal-50 rounded border border-teal-200 font-bold text-teal-900">"${finishItem.start}..."</p>`,
                 "border-teal-500"
             );
 
@@ -739,10 +739,9 @@
             const card9 = createCard(
                 "9. Filter Removal",
                 "fa-eye-slash",
-                `<p class="mb-2 italic text-slate-500 text-base">Rewrite to remove the <span class="highlight-pink">filter word</span>. Show the action directly instead of telling it:</p>
+                `<p class="mb-1 italic text-slate-500 text-base">Rewrite to remove the <span class="highlight-pink">filter word</span>. Show the action directly instead of telling it:</p>
                  <p class="leading-loose">"${filterItem}"</p>`,
-                "border-pink-500",
-                true // Full width for the last item to balance the grid
+                "border-pink-500"
             );
 
             // Inject into DOM
