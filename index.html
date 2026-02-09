@@ -67,13 +67,13 @@
             background-color: #f3e8ff; /* Purple 100 */
             border: 2px solid #d8b4fe; /* Purple 300 */
             color: #581c87; /* Purple 900 */
-            padding: 10px 18px;
-            border-radius: 12px;
-            margin: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin: 4px;
             display: inline-block;
-            font-size: 1.5rem; 
+            font-size: 1.25rem; 
             font-weight: 800; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             line-height: 1.3;
         }
 
@@ -81,12 +81,12 @@
             background-color: #ccfbf1; /* Teal 100 */
             border: 2px solid #5eead4; /* Teal 300 */
             color: #115e59; /* Teal 900 */
-            padding: 8px 18px;
+            padding: 6px 14px;
             border-radius: 24px;
             font-weight: 900;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             display: inline-block;
-            margin: 0 8px;
+            margin: 0 6px;
         }
 
         /* Print Styles */
@@ -96,9 +96,11 @@
             .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; margin-bottom: 20px; }
             h1 { font-size: 24px; }
             .activity-header { font-size: 18px; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 10px; }
-            p { font-size: 14pt; }
-            .phrase-pill, .vocab-pill { border: 1px solid #666; background: none; color: black; font-size: 14pt; }
-            #worksheet-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            p { font-size: 12pt; }
+            .phrase-pill, .vocab-pill { border: 1px solid #666; background: none; color: black; font-size: 12pt; }
+            #worksheet-container { display: block; }
+            .card textarea { display: none; } /* Hide textareas when printing */
+            .card { margin-bottom: 20px; }
         }
     </style>
 </head>
@@ -629,14 +631,23 @@
 
         function createCard(title, icon, contentHTML, colorClass, isFullWidth = false) {
             const widthClass = isFullWidth ? 'md:col-span-2' : '';
+            // Define border color for the input focus state based on the card color
+            const borderColor = colorClass.replace('border-', 'focus:ring-'); // rough approximation, might need mapping or just generic
+            
             return `
-                <div class="card bg-white rounded-xl shadow-lg border-l-8 ${colorClass} p-3 overflow-hidden relative ${widthClass} flex flex-col h-full">
-                    <div class="activity-header flex items-center gap-3 mb-1 text-slate-700">
+                <div class="card bg-white rounded-xl shadow-lg border-l-8 ${colorClass} p-4 overflow-hidden relative ${widthClass} flex flex-col h-full gap-4">
+                    <div class="activity-header flex items-center gap-3 text-slate-700">
                         <i class="fa-solid ${icon} text-xl"></i>
-                        <h2 class="text-2xl font-black uppercase tracking-wide">${title}</h2>
+                        <h2 class="text-xl font-black uppercase tracking-wide">${title}</h2>
                     </div>
-                    <div class="narrative-text text-xl leading-tight text-slate-800 flex-grow flex flex-col justify-center font-medium">
+                    <div class="narrative-text text-slate-800 flex-grow flex flex-col justify-center font-medium">
                         ${contentHTML}
+                    </div>
+                    <div class="mt-auto">
+                        <textarea 
+                            class="w-full p-3 rounded-lg border-2 border-slate-200 bg-slate-50 focus:outline-none focus:border-slate-400 focus:bg-white transition-colors text-lg font-medium text-slate-700 placeholder-slate-400 resize-none" 
+                            rows="2" 
+                            placeholder="Type your improved sentence here..."></textarea>
                     </div>
                 </div>
             `;
@@ -650,8 +661,8 @@
             const card1 = createCard(
                 "1. Variable Start", 
                 "fa-arrow-right-to-bracket",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Fix the repetitive opener:</p>
-                 <p class="font-extrabold text-4xl mb-3 leading-tight tracking-tight">"${opItem.text}"</p>
+                `<p class="mb-1 italic text-slate-500 text-lg">Rewrite this sentence to fix the repetitive opener:</p>
+                 <p class="font-extrabold text-3xl mb-3 leading-tight tracking-tight">"${opItem.text}"</p>
                  <p class="bg-indigo-50 p-2 rounded-lg border-2 border-indigo-100 text-indigo-900 font-bold text-xl">
                     <i class="fa-solid fa-bullseye mr-2"></i> ${opItem.type}
                  </p>`,
@@ -663,8 +674,8 @@
             const card2 = createCard(
                 "2. Detail Expansion",
                 "fa-paintbrush",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Add <strong class="text-emerald-600">5 adjectives</strong>:</p>
-                 <p class="p-3 bg-gray-50 rounded border-2 border-gray-200 font-extrabold text-4xl leading-tight tracking-tight">"${adjItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-lg">Add <strong class="text-emerald-600">5 adjectives</strong> to this complex sentence to create a vivid image:</p>
+                 <p class="p-3 bg-gray-50 rounded border-2 border-gray-200 font-extrabold text-2xl leading-tight tracking-tight">"${adjItem}"</p>`,
                 "border-emerald-500"
             );
 
@@ -673,8 +684,8 @@
             const card3 = createCard(
                 "3. Reduce Wordiness",
                 "fa-scissors",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Remove <span class="highlight-red">highlighted</span> clutter:</p>
-                 <p class="leading-tight font-extrabold text-4xl tracking-tight">"${stopItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-lg">Rewrite to remove the <span class="highlight-red">highlighted</span> functional words, using stronger verbs instead:</p>
+                 <p class="leading-tight font-extrabold text-2xl tracking-tight">"${stopItem}"</p>`,
                 "border-red-500"
             );
 
@@ -683,8 +694,8 @@
             const card4 = createCard(
                 "4. Active Voice",
                 "fa-person-running",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Make the Subject act:</p>
-                 <p class="p-3 bg-gray-50 rounded border-2 border-gray-200 font-extrabold text-4xl leading-tight tracking-tight">"${passItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-lg">Flip this Passive sentence so the Subject performs the action:</p>
+                 <p class="p-3 bg-gray-50 rounded border-2 border-gray-200 font-extrabold text-2xl leading-tight tracking-tight">"${passItem}"</p>`,
                 "border-orange-500"
             );
 
@@ -693,8 +704,8 @@
             const card5 = createCard(
                 "5. Power Verbs",
                 "fa-bolt",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Upgrade the weak <span class="highlight-yellow">verb</span>:</p>
-                 <p class="leading-tight font-extrabold text-4xl tracking-tight">"${verbItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-lg">Replace the weak <span class="highlight-yellow">highlighted verb</span> with a stronger, more specific synonym:</p>
+                 <p class="leading-tight font-extrabold text-2xl tracking-tight">"${verbItem}"</p>`,
                 "border-yellow-500"
             );
 
@@ -703,13 +714,18 @@
             const card6 = createCard(
                 "6. Remove Repetition",
                 "fa-clone",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Fix <span class="highlight-blue">repeated words</span>:</p>
-                 <p class="leading-tight font-extrabold text-4xl tracking-tight">"${repItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-lg">Combine these sentences or use pronouns to remove the <span class="highlight-blue">repeated words</span>:</p>
+                 <p class="leading-tight font-extrabold text-2xl tracking-tight">"${repItem}"</p>`,
                 "border-blue-500"
             );
 
             // 7. Scrambled Sentence
-            const scrambleItem = [...getRandomItem(data.scrambled)];
+            let scrambleData = getRandomItem(data.scrambled);
+            // Guard against error object return from getRandomItem
+            if (!Array.isArray(scrambleData)) {
+                scrambleData = ["Error: could not load", "scrambled sentence data", "please refresh", "the page", "."];
+            }
+            const scrambleItem = [...scrambleData];
             const shuffledPhrases = shuffleArray(scrambleItem);
             
             let phrasesHTML = shuffledPhrases.map(phrase => 
@@ -719,7 +735,7 @@
             const card7 = createCard(
                 "7. Reconstruction",
                 "fa-puzzle-piece",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Reorder these 5 phrases:</p>
+                `<p class="mb-1 italic text-slate-500 text-lg">Reorder these 5 phrases to form a single, coherent complex sentence:</p>
                  <div class="p-2 bg-purple-50 rounded border-2 border-purple-200 leading-tight">
                     ${phrasesHTML}
                  </div>`,
@@ -727,16 +743,19 @@
             );
 
             // 8. Finish the Sentence
-            const finishItem = getRandomItem(data.finishTheSentence);
+            let finishItem = getRandomItem(data.finishTheSentence);
+             if (!finishItem.words) {
+                finishItem = { start: "Error loading data...", words: ["Error", "Data"] };
+            }
             const card8 = createCard(
                 "8. Finish Sentence",
                 "fa-pen-fancy",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Finish using:</p>
+                `<p class="mb-1 italic text-slate-500 text-lg">Complete the narrative sentence started below. You must include these two words:</p>
                  <div class="mb-2">
                     <span class="vocab-pill">${finishItem.words[0]}</span>
                     <span class="vocab-pill">${finishItem.words[1]}</span>
                  </div>
-                 <p class="p-3 bg-teal-50 rounded border-2 border-teal-200 font-extrabold text-3xl text-teal-900 leading-tight tracking-tight">"${finishItem.start}..."</p>`,
+                 <p class="p-3 bg-teal-50 rounded border-2 border-teal-200 font-extrabold text-2xl text-teal-900 leading-tight tracking-tight">"${finishItem.start}..."</p>`,
                 "border-teal-500"
             );
 
@@ -745,8 +764,8 @@
             const card9 = createCard(
                 "9. Filter Removal",
                 "fa-eye-slash",
-                `<p class="mb-1 italic text-slate-500 text-xl font-medium">Remove the <span class="highlight-pink">filter word</span>:</p>
-                 <p class="leading-tight font-extrabold text-4xl tracking-tight">"${filterItem}"</p>`,
+                `<p class="mb-1 italic text-slate-500 text-lg">Rewrite to remove the <span class="highlight-pink">filter word</span>. Show the action directly instead of telling it:</p>
+                 <p class="leading-tight font-extrabold text-2xl tracking-tight">"${filterItem}"</p>`,
                 "border-pink-500",
                 true // isFullWidth passed as true for the 9th item to span
             );
