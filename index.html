@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SkillsLab</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,8 +14,8 @@
     --border: #2e3245;
     --text: #f0f2ff;
     --muted: #8b90b0;
-    --head-font: 'Barlow Condensed', sans-serif;
-    --body-font: 'Barlow', sans-serif;
+    --head-font: 'Arial Narrow', Arial, sans-serif;
+    --body-font: Arial, sans-serif;
 
     --c1: #4f8ef7; /* blue  – variable openers */
     --c2: #34c98e; /* green – detail expansion */
@@ -284,6 +284,37 @@
     .ppill { background: #f0f0f0; border-color: #bbb; color: #111; }
     .vpill { background: #eee; color: #111; border-color: #bbb; }
   }
+
+/* Full task text stays visible; click a title to present one task at a time. */
+nav { flex-wrap: wrap; gap: 12px; }
+.nav-btns { flex-wrap: wrap; }
+#week-select { max-width: 310px; }
+.practice-note { padding: 10px 18px 0; color: #b7bed8; font-size: 14px; line-height: 1.5; }
+main { flex: none; grid-template-rows: none; align-items: stretch; }
+.card { min-height: 265px; }
+.card-body { overflow: visible; }
+.content-text { overflow: visible; display: block; -webkit-line-clamp: unset; flex: none; font-size: 1.35rem; }
+.phrase-pills { overflow: visible; flex: none; }
+.card-title { font-size: 1.35rem; }
+.instruction { font-size: 1.05rem; }
+.badge { font-size: 1rem; }
+.vpill { font-size: 1.1rem; }
+.focus-task { background: none; border: 0; padding: 2px 0; text-align: left; cursor: pointer; font-family: var(--head-font); }
+.focus-task:hover { text-decoration: underline; }
+button:focus-visible,select:focus-visible,input:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.enlarge-label { font-size: .9em; }
+dialog { width: min(950px, 94vw); max-height: 90vh; overflow: auto; margin: auto; padding: 25px; background: var(--surface); color: var(--text); border: 2px solid var(--border); border-radius: 12px; }
+dialog::backdrop { background: #000b; }
+#close-task { float: right; margin-bottom: 20px; }
+#focused-task { clear: both; }
+#focused-task h2 { color: var(--accent); font-size: 2rem; margin: 0 0 20px; }
+#focused-task .instruction { font-size: 1.25rem; margin-bottom: 24px; }
+#focused-task .content-text { font-size: clamp(1.5rem, 3.2vw, 2.25rem); line-height: 1.5; margin: 20px 0; }
+#focused-task .ppill { font-size: 1.4rem; }
+@media(max-width: 1050px) { main { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media(max-width: 650px) { main { grid-template-columns: minmax(0,1fr); } nav { padding: 12px; } nav h1 { font-size: 1.8rem; } .timer-block { flex-wrap: wrap; gap: 7px; padding: 6px 10px; } .btn-timer { padding: 6px 10px; } .timer-display { font-size: 2rem; min-width: 65px; } #week-select { max-width: 245px; } .card { min-height: 0; } .card-body { padding: 14px; gap: 12px; } }
+@media print { nav .timer-block,dialog,.enlarge-label { display: none !important; } main { display: block; } .card { break-inside: avoid; min-height: 0; margin-bottom: 12px; } .focus-task { color: black !important; } .practice-note { color: #333; } .content-text { font-size: 12pt; } .instruction { font-size: 10pt; } .ppill { font-size: 10pt; } }
+
 </style>
 </head>
 <body>
@@ -305,325 +336,19 @@
   <div class="nav-btns" style="align-items:center">
     <label style="font-family:var(--head-font);font-size:1.1rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)">Week</label>
     <select id="week-select" onchange="generateWorksheet()" style="font-family:var(--head-font);font-size:1.3rem;font-weight:700;background:var(--surface);color:var(--text);border:1.5px solid var(--border);border-radius:6px;padding:6px 14px;cursor:pointer;appearance:auto">
-      <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
-      <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
-      <option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option>
-      <option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option>
+      <option value="1">1 · The substitute robot</option><option value="2">2 · The cake rescue</option><option value="3">3 · The pocket possum</option><option value="4">4 · The group chat</option><option value="5">5 · The unexpected audition</option>
+      <option value="6">6 · The borrowed book</option><option value="7">7 · The impossible race</option><option value="8">8 · The town meeting</option><option value="9">9 · The camping confession</option><option value="10">10 · The mirror message</option>
+      <option value="11">11 · The borrowed invention</option><option value="12">12 · The queue mystery</option><option value="13">13 · The new teammate</option><option value="14">14 · The second-hand bargain</option><option value="15">15 · The dragon visitor</option>
+      <option value="16">16 · The scoreboard glitch</option><option value="17">17 · The overnight garden</option><option value="18">18 · The expanding apology</option><option value="19">19 · The two-minute rescue</option><option value="20">20 · The final invitation</option>
     </select>
     <button class="btn btn-print" onclick="window.print()">&#9112; Print</button>
   </div>
 </nav>
 
-<main id="grid"></main>
+<p class="practice-note">Deliberate practice · Try each writing tenet here. In your own writing, choose the techniques that suit your purpose.</p><main id="grid"></main><dialog id="task-dialog"><button class="btn btn-print" id="close-task" type="button">Close</button><div id="focused-task"></div></dialog>
 
 <script>
-const data = {
-  openers: [
-    { text: "The alleyway remained slick with oil and secrets even though the rain had stopped.", type: "Start with an EMOTION — e.g. Suspicious..." },
-    { text: "The cybernetic soldiers marched in perfect, terrifying unison beneath the obsidian bridge.", type: "Start with WHERE — e.g. Beneath..." },
-    { text: "She hesitated at the threshold because of the unnatural silence inside the house.", type: "Start with WHY — e.g. Fearing..." },
-    { text: "The dragon coiled tightly around the tower and crushed the ancient stone with its scales.", type: "Start with a VERB-ing — e.g. Coiling..." },
-    { text: "The extraction team vanished into the shadows just as the alarm began to wail.", type: "Start with WHEN — e.g. Moments before..." },
-    { text: "A single crimson rose lay frozen in time on the snowy grave.", type: "Start with a PREPOSITION — e.g. Amidst..." },
-    { text: "The refugees huddled together under the bridge while the storm raged overhead.", type: "Start with WHERE — e.g. Under..." },
-    { text: "He gripped the steering wheel until his knuckles turned white because he was terrified the brakes had failed.", type: "Start with an EMOTION — e.g. Panicked..." },
-    { text: "The ancient mechanism finally locked into place when the sun hit the zenith.", type: "Start with WHEN — e.g. At noon..." },
-    { text: "The spy burned the documents without hesitation to protect her contact in Berlin.", type: "Start with WHY — e.g. To protect..." },
-    { text: "The tsunami wave crested over the sea wall and devoured the coastline.", type: "Start with a VERB-ing — e.g. Cresting..." },
-    { text: "The hidden camera was perfectly concealed inside the eye of the painting.", type: "Start with a PREPOSITION — e.g. Within..." },
-    { text: "The captain sighed with resignation when he realised the fuel gauge was broken.", type: "Start with an EMOTION — e.g. Resigned..." },
-    { text: "The creature retreated into the crushing depths of the ocean to heal its wounds.", type: "Start with WHY — e.g. Seeking..." },
-    { text: "A drone hovered silently above the protesters like a mechanical vulture.", type: "Start with WHERE — e.g. Above..." },
-    { text: "The thief froze when he heard the distinct click of a revolver hammer.", type: "Start with a VERB-ing — e.g. Freezing..." },
-    { text: "The package arrived at dawn carrying no return address.", type: "Start with WHEN — e.g. As the sun rose..." },
-    { text: "The secret laboratory was buried beneath the ice shelf, away from prying eyes.", type: "Start with a PREPOSITION — e.g. Beneath..." },
-    { text: "The crowd gasped as one, horrified by the sudden blackout.", type: "Start with an EMOTION — e.g. Horrified..." },
-    { text: "The river of lava flowed relentlessly toward the abandoned village.", type: "Start with WHERE — e.g. Down..." },
-    { text: "She had studied the ancient dialect for years to decipher the prophecy.", type: "Start with WHY — e.g. Hoping..." },
-    { text: "The clock tower chimed at midnight, signalling the end of the truce.", type: "Start with WHEN — e.g. When..." },
-    { text: "The sorcerer raised his staff to the sky and summoned the storm.", type: "Start with a VERB-ing — e.g. Summoning..." },
-    { text: "The key was taped securely underneath the interrogation table.", type: "Start with a PREPOSITION — e.g. Beneath..." },
-    { text: "The marathon runner collapsed metres from the finish line, broken by the heat.", type: "Start with an EMOTION — e.g. Defeated..." },
-    { text: "A shadowy figure waited patiently in the reflection of the mirror.", type: "Start with WHERE — e.g. Inside..." },
-    { text: "The rebels sabotaged the train tracks to stop the supply shipment.", type: "Start with WHY — e.g. Aiming..." },
-    { text: "The fog rolled in like a thick blanket as evening fell.", type: "Start with WHEN — e.g. As evening..." },
-    { text: "The hawk circled above the canyon floor in search of prey.", type: "Start with a PREPOSITION — e.g. Over..." },
-    { text: "The pilot fought the turbulence, struggling to keep the jet level.", type: "Start with a VERB-ing — e.g. Struggling..." },
-    { text: "The monster roared until the cavern shook, enraged by the intrusion.", type: "Start with an EMOTION — e.g. Furious..." },
-    { text: "The wildflowers grew against all odds in the cracks of the pavement.", type: "Start with WHERE — e.g. Between..." },
-    { text: "The fleet sailed beyond the horizon into unknown waters.", type: "Start with a PREPOSITION — e.g. Past..." },
-    { text: "The chef prepared the poisonous fugu fish with intense, silent focus.", type: "Start with a VERB-ing — e.g. Preparing..." },
-  ],
-
-  adjectives: [
-    "Gathering over the peaks, the clouds cast shadows across the floor of the valley.",
-    "Stepping into the library, she pushed open the door and inhaled the scent of old paper.",
-    "Just in time to deflect the dragon's breath, the knight raised his shield.",
-    "As the sun began to set, lights flickered on above the city rooftops.",
-    "Drifting through the emptiness of space, the spaceship hummed as it approached the planet.",
-    "Crashing against the shore, the waves sprayed mist into the air before receding.",
-    "Deep within the forest, trees twisted towards the sky like gnarled fingers.",
-    "Hidden in the attic, the map hinted at treasure buried beneath the island.",
-    "Stopping only to catch their breath, they climbed the path up the mountain.",
-    "Watching the campers closely, a wolf stood at the edge of the clearing.",
-    "Leaving a trail of smoke, the car sped down the highway towards the horizon.",
-    "Marvelling at the reefs below, the diver swam deeper into the ocean.",
-    "Covered in a blanket of snow, the village fell silent.",
-    "Releasing puffs of steam as it climbed the hill, the train chugged along the tracks.",
-    "Noticing a detail everyone else had missed, the detective leaned closer to the painting.",
-    "As the ship approached from the horizon, the captain shouted orders to his crew.",
-    "Bringing tears to the eyes of the audience, the musician played a melody on the violin.",
-    "Searching for the temple, the explorer hacked through the vines with a machete.",
-    "Waiting for the sun to set, the vampire slept in a coffin deep in the crypt.",
-    "Passing through walls effortlessly, the ghost drifted along the hallway.",
-    "Gripping the controls, the pilot guided the damaged plane through the storm.",
-    "Hoping to strike a vein of silver, the miner swung his pick at the cave wall.",
-    "Navigating between the tables, the waiter balanced a tray of drinks.",
-    "Calculating the measurements with precision, the architect drew the plans for the tower.",
-    "Trying to capture the scene before it faded, the journalist typed at her desk.",
-    "Preparing the ingredients for the stew, the chef chopped the vegetables with swift strokes.",
-    "Fighting back the flames, the firefighter aimed the hose at the burning building.",
-    "Guiding the car around the corner, the driver gripped the wheel on the icy road.",
-  ],
-
-  stopWords: [
-    { raw: `Standing in the rain-slicked alleyway, the detective <hl-red>was</hl-red> noticing that there <hl-red>were</hl-red> many shadows <hl-red>that were</hl-red> hiding the evidence he <hl-red>was</hl-red> looking for.` },
-    { raw: `Because the pilot <hl-red>was</hl-red> afraid that there <hl-red>were</hl-red> too many storms <hl-red>that were</hl-red> blocking the path, the mission <hl-red>was</hl-red> failing.` },
-    { raw: `While walking past the basement, she <hl-red>had</hl-red> a feeling that someone <hl-red>was</hl-red> watching her because there <hl-red>was</hl-red> a sound <hl-red>that was</hl-red> very quiet.` },
-    { raw: `Long before the war began, the kingdom <hl-red>was</hl-red> at peace and there <hl-red>were</hl-red> no dragons <hl-red>that were</hl-red> terrorising the nearby villages.` },
-    { raw: `Holding the test tube up to the light, the scientist <hl-red>was</hl-red> hoping that the experiment <hl-red>was</hl-red> going to work because it <hl-red>was</hl-red> his last chance.` },
-    { raw: `After the verdict <hl-red>was</hl-red> read by the judge, there <hl-red>was</hl-red> a heavy silence <hl-red>that was</hl-red> hanging in the courtroom.` },
-    { raw: `Due to the fact that there <hl-red>were</hl-red> guards <hl-red>who were</hl-red> standing at every gate, he <hl-red>was</hl-red> of the opinion that the plan <hl-red>was</hl-red> dangerous.` },
-    { raw: `Hiding deep in the cave, the creature <hl-red>was</hl-red> waiting for the sun to go down so that it <hl-red>was</hl-red> safe to come out.` },
-    { raw: `In the middle of the night, the spy <hl-red>was</hl-red> trying to break the code <hl-red>that was</hl-red> protecting the computer in the office.` },
-    { raw: `Scared that the monster <hl-red>that was</hl-red> chasing her <hl-red>was</hl-red> going to catch her, she <hl-red>was</hl-red> running as fast as she could.` },
-    { raw: `Floating through the wall, the ghost <hl-red>was</hl-red> making a noise <hl-red>that was</hl-red> like a whisper in the wind.` },
-    { raw: `Marching through the mud <hl-red>that was</hl-red> covering the road, the soldiers <hl-red>were</hl-red> struggling because it <hl-red>was</hl-red> raining very hard.` },
-    { raw: `Lost in the dark forest, the key <hl-red>that was</hl-red> needed to open the door <hl-red>was</hl-red> missing.` },
-    { raw: `Thinking that the eyes <hl-red>were</hl-red> following her, she <hl-red>was</hl-red> looking nervously at the painting.` },
-    { raw: `Hidden behind the bookcase <hl-red>that was</hl-red> in the old library, there <hl-red>was</hl-red> a secret passage.` },
-    { raw: `Trying not to be heard by the guards <hl-red>who were</hl-red> passing by, he <hl-red>was</hl-red> holding his breath.` },
-    { raw: `Standing perfectly still, the robot <hl-red>was</hl-red> showing signs that it <hl-red>was</hl-red> about to attack because its eyes <hl-red>were</hl-red> glowing red.` },
-    { raw: `Because there <hl-red>were</hl-red> cracks <hl-red>that were</hl-red> appearing in the stone, it <hl-red>was</hl-red> apparent that the bridge <hl-red>was</hl-red> not strong enough.` },
-    { raw: `Rising from the cauldron <hl-red>that was</hl-red> boiling, a cloud of smoke <hl-red>was</hl-red> appearing while the wizard <hl-red>was</hl-red> chanting a spell.` },
-    { raw: `Hiding her face so that no one <hl-red>was</hl-red> able to see her, she <hl-red>was</hl-red> wearing a cloak <hl-red>that was</hl-red> made of velvet.` },
-    { raw: `Carved into the rock, ancient runes <hl-red>were</hl-red> glowing with a light <hl-red>that was</hl-red> blue.` },
-    { raw: `Trying to stay afloat, the ship <hl-red>was</hl-red> battered because the storm <hl-red>was</hl-red> getting worse and the waves <hl-red>were</hl-red> crashing.` },
-    { raw: `As the sun <hl-red>was</hl-red> setting behind the mountains, a feeling of dread <hl-red>was</hl-red> settling over the town.` },
-    { raw: `Displaying a message <hl-red>that was</hl-red> saying the system <hl-red>was</hl-red> compromised, the computer <hl-red>was</hl-red> malfunctioning.` },
-    { raw: `Suggesting that the thief <hl-red>was</hl-red> someone <hl-red>who was</hl-red> working inside the bank, the evidence <hl-red>was</hl-red> confusing.` },
-    { raw: `Before dawn, it <hl-red>was</hl-red> essential that the message <hl-red>was</hl-red> delivered or the attack <hl-red>was</hl-red> going to fail.` },
-    { raw: `Getting closer to the room <hl-red>where</hl-red> they <hl-red>were</hl-red> hiding, footsteps <hl-red>were</hl-red> echoing down the hallway.` },
-    { raw: `Actually listening to the conversation <hl-red>that was</hl-red> happening outside, she <hl-red>was</hl-red> pretending to be asleep.` },
-    { raw: `Covering the machines <hl-red>that were</hl-red> once working, rust <hl-red>was</hl-red> everywhere because the factory <hl-red>was</hl-red> abandoned.` },
-    { raw: `Due to the fact that he <hl-red>had</hl-red> stolen the cursed diamond, he <hl-red>was</hl-red> running away.` },
-    { raw: `Pointing a weapon <hl-red>that was</hl-red> glowing green at the humans, the alien <hl-red>was</hl-red> terrifying them.` },
-    { raw: `As the candle <hl-red>was</hl-red> flickering, the shadow <hl-red>that was</hl-red> moving across the wall <hl-red>was</hl-red> changing shape.` },
-    { raw: `In the thick fog, everything <hl-red>was</hl-red> looking the same even though he <hl-red>was</hl-red> trying to remember the way.` },
-    { raw: `When there <hl-red>was</hl-red> no one <hl-red>who was</hl-red> found there, it <hl-red>was</hl-red> a mystery how the room <hl-red>was</hl-red> locked from inside.` },
-  ],
-
-  passive: [
-    `With a groan of rusted hinges, the heavy iron gates <hl-orange>were pushed</hl-orange> open by the howling wind.`,
-    `For centuries, the old legend <hl-orange>was passed down</hl-orange> by the village elders.`,
-    `Before it could reach Earth, the distress signal <hl-orange>was intercepted</hl-orange> by the enemy fleet.`,
-    `In a moment of bravery, the fallen flag <hl-orange>was retrieved</hl-orange> by the youngest soldier.`,
-    `By the light of the moon, the treasure chest <hl-orange>was uncovered</hl-orange> by the exploring children.`,
-    `As night fell, the remote village <hl-orange>was consumed</hl-orange> by the encroaching fog.`,
-    `Tucked inside the locket, the secret message <hl-orange>was found</hl-orange> by the orphan girl.`,
-    `Suddenly, the entire valley <hl-orange>was illuminated</hl-orange> by the dragon's fiery breath.`,
-    `To a stunned crowd, the winning goal <hl-orange>was scored</hl-orange> in the final second of the match.`,
-    `Before it could truly begin, the escape plan <hl-orange>was discovered</hl-orange> by the night guard.`,
-    `Under the cover of darkness, the ancient map <hl-orange>was stolen</hl-orange> from the museum.`,
-    `To stop the rising flood, the sandbag wall <hl-orange>was built</hl-orange> by the whole community.`,
-    `Deep in the jungle, the long-lost city <hl-orange>was discovered</hl-orange> by the young explorer.`,
-    `In the final round, the reigning champion <hl-orange>was defeated</hl-orange> by the unknown challenger.`,
-    `Rumour had it that the old manor <hl-orange>was haunted</hl-orange> by the spirit of a former owner.`,
-    `Echoing through the canyon, an eerie sound <hl-orange>was heard</hl-orange> by the campers.`,
-    `With a sickening click, the trap <hl-orange>was triggered</hl-orange> by a careless step.`,
-    `Despite the warnings, the forbidden door <hl-orange>was unlocked</hl-orange> by the curious apprentice.`,
-    `After the long journey, the weary travellers <hl-orange>were welcomed</hl-orange> with a magnificent feast.`,
-    `Feared for its power, the ancient spellbook <hl-orange>was locked away</hl-orange> by the High Council.`,
-    `Mercilessly, the small sailing boat <hl-orange>was tossed</hl-orange> by the violent storm waves.`,
-    `To hide the location, the map <hl-orange>was drawn</hl-orange> in invisible ink.`,
-    `Within seconds, the school's computer network <hl-orange>was crashed</hl-orange> by the mysterious glitch.`,
-    `At the crack of dawn, the fortress gates <hl-orange>were sealed</hl-orange> by the night watch.`,
-    `Unexpectedly, the tiny island <hl-orange>was discovered</hl-orange> by the storm-blown fishing boat.`,
-    `A haunting melody <hl-orange>was played</hl-orange> on a violin left behind in the empty concert hall.`,
-    `Deep in the forest, the ancient ceremony <hl-orange>was performed</hl-orange> by firelight.`,
-    `At the crack of dawn, the castle walls <hl-orange>were breached</hl-orange> by the siege engines.`,
-    `Tragically, the final warning <hl-orange>was ignored</hl-orange> by the overconfident captain.`,
-    `From the burning building, the trapped cat <hl-orange>was rescued</hl-orange> by the quick-thinking firefighter.`,
-    `With her last message, the explorer's incredible discovery <hl-orange>was revealed</hl-orange> to the world.`,
-    `On the edge of the cliff, a tiny wooden sign <hl-orange>was carved</hl-orange> with a single word: danger.`,
-    `After years of searching, the missing piece of the puzzle <hl-orange>was found</hl-orange> behind the old bookcase.`,
-    `After years of study, the ancient riddle <hl-orange>was solved</hl-orange> by the determined student.`,
-  ],
-
-  basicVerbs: [
-    `Under the cover of darkness, the shadowed figure <hl-yellow>went</hl-yellow> through the dense undergrowth, ignoring the thorns.`,
-    `Trembling with fear, the witness <hl-yellow>said</hl-yellow> that the creature had glowing red eyes.`,
-    `Exhausted and dehydrated, the refugees <hl-yellow>walked</hl-yellow> across the scorching desert for days.`,
-    `Casting a shadow on the city, the majestic dragon <hl-yellow>flew</hl-yellow> above the clouds.`,
-    `Without mercy, the ruthless dictator <hl-yellow>took</hl-yellow> control of the neighbouring country.`,
-    `Curious, she <hl-yellow>looked</hl-yellow> at the mysterious symbols carved into the stone wall.`,
-    `In a blind panic, the herd <hl-yellow>ran</hl-yellow> away from the approaching wildfire.`,
-    `With the force of a nuclear bomb, the asteroid <hl-yellow>hit</hl-yellow> the moon's surface.`,
-    `Alone in the empty nursery, the grieving mother <hl-yellow>cried</hl-yellow> silently.`,
-    `Bringing hail and wind, a sudden storm <hl-yellow>came</hl-yellow> into the valley.`,
-    `After years of silence, he finally <hl-yellow>got</hl-yellow> the courage to speak the truth.`,
-    `Inexorably, the black hole <hl-yellow>ate</hl-yellow> the surrounding stars.`,
-    `Working in secret, the engineer <hl-yellow>made</hl-yellow> a device that could stop time.`,
-    `As a sign of surrender, the soldier <hl-yellow>put</hl-yellow> his weapon on the ground.`,
-    `Through the telescopic sight, the sniper <hl-yellow>saw</hl-yellow> the target clearly.`,
-    `From inside the closet, the detective <hl-yellow>heard</hl-yellow> a faint whisper.`,
-    `Late into the night, the philosopher <hl-yellow>thought</hl-yellow> about the meaning of existence.`,
-    `Driven by greed, the villain <hl-yellow>wanted</hl-yellow> absolute power over the kingdom.`,
-    `Before vanishing, the ancient gods <hl-yellow>gave</hl-yellow> the hero a magical shield.`,
-    `Carving the valley over centuries, the glacier <hl-yellow>moved</hl-yellow> inches every year.`,
-    `Ominously, the gargoyle <hl-yellow>sat</hl-yellow> on the edge of the cathedral roof.`,
-    `For their freedom, the gladiators <hl-yellow>fought</hl-yellow> in the arena.`,
-    `Across the dark waters, the beacon <hl-yellow>shone</hl-yellow> brightly.`,
-    `With tremendous force, the gale <hl-yellow>blew</hl-yellow> the roof off the barn.`,
-    `Unchecked for weeks, the forest fire <hl-yellow>burned</hl-yellow> through everything.`,
-    `Guarding its hoard, the dragon <hl-yellow>slept</hl-yellow> on a pile of gold coins.`,
-    `To preserve the truth, the scholar <hl-yellow>wrote</hl-yellow> the history of the war.`,
-    `Desperate to score, the quarterback <hl-yellow>threw</hl-yellow> the ball to the end zone.`,
-    `Just in time, the spy <hl-yellow>caught</hl-yellow> the falling vial of poison.`,
-    `For a terrifying moment, the heart <hl-yellow>stopped</hl-yellow> beating.`,
-    `The fate of the world <hl-yellow>turned</hl-yellow> on this single decision.`,
-    `Frightened, the child <hl-yellow>drew</hl-yellow> a monster under the bed.`,
-    `To lure the sailors, the siren <hl-yellow>sang</hl-yellow> a haunting melody.`,
-    `Silently, the assassin <hl-yellow>moved</hl-yellow> through the shadows.`,
-    `Menacingly, the shark <hl-yellow>swam</hl-yellow> in circles around the boat.`,
-  ],
-
-  repetition: [
-    `Scanning the horizon, the <hl-blue>cybernetic soldier</hl-blue> paused. The <hl-blue>cybernetic soldier</hl-blue> realised his battery was critically low.`,
-    `Under the microscope, the <hl-blue>detective</hl-blue> examined the fingerprint. The <hl-blue>detective</hl-blue> knew this was the break she needed.`,
-    `Raging outside the bunker, the <hl-blue>storm</hl-blue> howled. The <hl-blue>storm</hl-blue> threatened to tear the door off its hinges.`,
-    `Terrified, she <hl-blue>gripped</hl-blue> the steering wheel. She <hl-blue>gripped</hl-blue> it until her knuckles turned white.`,
-    `Resting on the pedestal, the <hl-blue>ancient tome</hl-blue> gathered dust. The <hl-blue>ancient tome</hl-blue> was bound in dragon scale.`,
-    `Since childhood, he <hl-blue>feared</hl-blue> the dark. He <hl-blue>feared</hl-blue> what lived inside the dark.`,
-    `Running on fumes, the <hl-blue>spaceship</hl-blue> landed on the desolate moon. The <hl-blue>spaceship</hl-blue> was damaged beyond repair.`,
-    `At midnight, the <hl-blue>wolf</hl-blue> howled at the moon. The <hl-blue>wolf</hl-blue> was calling its pack to the hunt.`,
-    `Silently, the <hl-blue>shadow</hl-blue> moved across the wall. The <hl-blue>shadow</hl-blue> did not belong to anyone in the room.`,
-    `Just in time, she <hl-blue>remembered</hl-blue> the code. She <hl-blue>remembered</hl-blue> it before the timer hit zero.`,
-    `Looming ahead, the <hl-blue>mountain</hl-blue> was steep. The <hl-blue>mountain</hl-blue> was covered in treacherous ice.`,
-    `Found in the dirt, the <hl-blue>key</hl-blue> was rusty. The <hl-blue>key</hl-blue> looked like it hadn't been used in years.`,
-    `In the tomb, the <hl-blue>silence</hl-blue> was heavy. The <hl-blue>silence</hl-blue> was suffocating the explorers.`,
-    `Desperately, he <hl-blue>ran</hl-blue> through the forest. He <hl-blue>ran</hl-blue> from the monster chasing him.`,
-    `Hanging on the wall, the <hl-blue>mirror</hl-blue> was cracked. The <hl-blue>mirror</hl-blue> showed a distorted reflection.`,
-    `Uncontrolled, the <hl-blue>fire</hl-blue> burned brightly. The <hl-blue>fire</hl-blue> consumed everything in its path.`,
-    `Stretching forever, the <hl-blue>ocean</hl-blue> was vast. The <hl-blue>ocean</hl-blue> was filled with unknown creatures.`,
-    `On the wall, the <hl-blue>clock</hl-blue> ticked loudly. The <hl-blue>clock</hl-blue> was counting down to zero.`,
-    `Covered in moss, the <hl-blue>statue</hl-blue> stood in the square. The <hl-blue>statue</hl-blue> watched the people pass by.`,
-    `Relentlessly, the <hl-blue>rain</hl-blue> fell from the grey sky. The <hl-blue>rain</hl-blue> washed away the footprints.`,
-    `Reinforced with steel, the <hl-blue>door</hl-blue> was locked. The <hl-blue>door</hl-blue> would not budge.`,
-    `Suddenly, the <hl-blue>light</hl-blue> flickered. The <hl-blue>light</hl-blue> went out completely, leaving them in darkness.`,
-    `For hours, he <hl-blue>waited</hl-blue> for the signal. He <hl-blue>waited</hl-blue> until his hope began to fade.`,
-    `Not on any map, the <hl-blue>island</hl-blue> was deserted. The <hl-blue>island</hl-blue> held many secrets.`,
-    `Obscuring the road, the <hl-blue>fog</hl-blue> was thick. The <hl-blue>fog</hl-blue> chilled them to the bone.`,
-    `With trembling hands, she <hl-blue>opened</hl-blue> the box. She <hl-blue>opened</hl-blue> it to reveal the gem inside.`,
-    `Tearing at the sails, the <hl-blue>wind</hl-blue> howled. The <hl-blue>wind</hl-blue> drove the ship onto the rocks.`,
-    `Heavily armed, the <hl-blue>enemy</hl-blue> approached. The <hl-blue>enemy</hl-blue> surrounded the fort on all sides.`,
-    `Crumbling with age, the <hl-blue>castle</hl-blue> was ruined. The <hl-blue>castle</hl-blue> was said to be haunted.`,
-    `Swollen with rain, the <hl-blue>river</hl-blue> flowed fast. The <hl-blue>river</hl-blue> threatened to burst its banks.`,
-    `Softly, she <hl-blue>sang</hl-blue> a lullaby. She <hl-blue>sang</hl-blue> it to calm the crying child.`,
-    `About to snap, the <hl-blue>rope</hl-blue> was frayed. The <hl-blue>rope</hl-blue> held the climber's entire weight.`,
-    `Sputtering, the <hl-blue>engine</hl-blue> stalled. The <hl-blue>engine</hl-blue> wouldn't start again.`,
-    `Hard to decode, the <hl-blue>message</hl-blue> was cryptic. The <hl-blue>message</hl-blue> had arrived at midnight.`,
-  ],
-
-  scrambled: [
-    ["although the sun had set hours ago,", "casting long shadows across the valley,", "the weary travellers continued their journey,", "driven by a desperate hope,", "that safety lay just beyond the ridge."],
-    ["hidden beneath the floorboards of the attic,", "wrapped in layers of dusty velvet,", "the ancient tome waited patiently,", "for someone foolish enough,", "to break the seal and read the incantation."],
-    ["ignoring the chaos erupting around him,", "the hacker typed furiously at the terminal,", "knowing he had only seconds,", "to bypass the military firewall,", "before the security drones located his position."],
-    ["with the engines screaming in protest,", "the pilot pulled back on the stick,", "forcing the damaged fighter jet,", "into a steep and dangerous climb,", "towards the safety of the cloud cover."],
-    ["standing on the edge of the precipice,", "the wind howling like a banshee,", "he finally understood the truth,", "that the prophecy was not a gift,", "but a terrible and inescapable curse."],
-    ["despite the warnings of the village elders,", "who spoke of shadows that moved,", "the young hunter entered the forest,", "clutching his spear with white knuckles,", "determined to prove his worth to the tribe."],
-    ["beneath the surface of the frozen lake,", "where the light could not reach,", "something ancient stirred from its sleep,", "disturbed by the vibrations of the drill,", "that pierced the ice far above."],
-    ["as the final seconds of the countdown ticked away,", "the astronaut closed her eyes tightly,", "visualising the face of her daughter,", "one last time before ignition,", "blasted her into the endless void."],
-    ["creeping through the ventilation shafts,", "the spy avoided the thermal sensors,", "holding her breath as she passed,", "directly over the guard room,", "where three soldiers played cards below."],
-    ["amidst the ruins of the forgotten city,", "overgrown with vines and moss,", "the archaeologist brushed away the dirt,", "revealing a metallic surface,", "that hummed with a strange energy."],
-    ["when the heavy iron gates finally opened,", "revealing the courtyard beyond,", "the crowd surged forward like a wave,", "shouting demands for justice,", "that had been denied for too long."],
-    ["trapped inside the collapsing building,", "with smoke filling his lungs,", "the firefighter crawled along the floor,", "searching for the frightened child,", "he had heard crying moments before."],
-    ["under the watchful gaze of the gargoyles,", "perched high upon the cathedral,", "the hooded figure slipped into the night,", "carrying a secret message,", "that could topple the kingdom."],
-    ["realising that the map was a fake,", "designed to lead them into a trap,", "the captain ordered a retreat,", "but the enemy ships had already,", "encircled their position on all sides."],
-    ["while the rest of the world slept,", "oblivious to the approaching danger,", "the scientists at the observatory,", "watched the asteroid grow larger,", "on their monitoring screens with horror."],
-    ["driven by a hunger that never faded,", "the wolf prowled the snowy woods,", "its yellow eyes scanning the darkness,", "for any sign of movement,", "that might betray a hidden prey."],
-    ["sitting alone in the interrogation room,", "under the harsh glare of the lamp,", "the suspect maintained his silence,", "refusing to betray his accomplices,", "despite the mounting evidence against him."],
-    ["as the storm intensified outside,", "rattling the windows in their frames,", "the family huddled around the fireplace,", "listening to the old radio,", "crackle with static and warnings."],
-    ["buried deep within the mountain,", "accessible only by a secret passage,", "the dragon's hoard glittered in the dark,", "a vast ocean of gold and gems,", "accumulated over a thousand years."],
-    ["knowing that this was a one-way mission,", "the soldier checked his gear,", "and took a deep, steadying breath,", "before stepping out of the dropship,", "into the chaos of the battlefield."],
-  ],
-
-  finishTheSentence: [
-    { start: "Fractured by centuries of neglect, the stained-glass window finally gave way to the howling storm", words: ["shards", "memory"] },
-    { start: "Although the ancient clock had long since stopped, the pendulum began to swing once more with a slow, steady rhythm", words: ["silence", "rust"] },
-    { start: "Blind to the danger lurking beneath the frozen lake, the explorer pressed on across the ice", words: ["crack", "cold"] },
-    { start: "Paralysed by the sudden silence that fell over the forest, she stood completely still and listened", words: ["echo", "shadow"] },
-    { start: "Hidden within the crackle of the old radio, a voice began to whisper coordinates nobody had heard before", words: ["signal", "ghost"] },
-    { start: "As the mist rolled in from the harbour, it swallowed the old lighthouse whole", words: ["lantern", "lost"] },
-    { start: "Driven by curiosity rather than caution, the young explorer crept deeper into the cave", words: ["torch", "discovery"] },
-    { start: "Written in fading ink on the back of the map was a message nobody had noticed until now", words: ["clue", "journey"] },
-    { start: "Floating weightlessly in the observation deck, the young astronaut pressed her face against the glass", words: ["planet", "wonder"] },
-    { start: "Beneath the overgrown garden wall, something had been buried and deliberately forgotten", words: ["soil", "secret"] },
-    { start: "Carved into the bark of the ancient oak were three words that made her breath catch in her throat", words: ["warning", "past"] },
-    { start: "Staring into the still water of the pool, she realised the reflection showed a room she didn't recognise", words: ["mirror", "mystery"] },
-    { start: "Amidst the wreckage of the old boathouse, a single locked box had survived the storm completely undamaged", words: ["key", "survivor"] },
-    { start: "Hidden in the school attic for decades, the document raised questions nobody had thought to ask", words: ["discovery", "truth"] },
-    { start: "As the solar eclipse reached totality, the birds fell silent and the air turned unexpectedly cold", words: ["darkness", "wonder"] },
-    { start: "Stone by stone, the walls of the underground chamber shifted to reveal a passage that had not existed a moment before", words: ["maze", "torch"] },
-    { start: "Dressed in an elaborate costume, she moved through the carnival crowd without anyone recognising her", words: ["disguise", "crowd"] },
-    { start: "The old cottage at the edge of the forest had not been lived in for thirty years, yet smoke rose from the chimney", words: ["footprint", "firelight"] },
-    { start: "Scanning the dark water from the cliff top, the coast guard spotted something enormous moving just below the surface", words: ["creature", "wave"] },
-    { start: "In the dusty music room, the piano began to play a slow tune, though nobody sat at the keys", words: ["melody", "chill"] },
-    { start: "Descending the spiral staircase with only a candle for light, she counted sixty steps before reaching the bottom", words: ["stone", "underground"] },
-    { start: "Exploring the abandoned cottage, she pushed open a door and found a room that looked as though someone had just left", words: ["dust", "mystery"] },
-    { start: "The old lighthouse keeper had left behind a journal, and the final entry described something impossible", words: ["storm", "warning"] },
-    { start: "Rattling along the mountain railway, the passengers had no idea the line had been closed for twenty years", words: ["ticket", "mist"] },
-    { start: "Rusted shut for decades, the iron gate finally swung open when she pressed her palm against the crest", words: ["garden", "secret"] },
-    { start: "Peering through the telescope, the young astronomer spotted a pattern of lights on the dark side of the moon", words: ["signal", "distant"] },
-    { start: "In the centre of the empty field, the long grass had been flattened in a perfect circle overnight", words: ["pattern", "strange"] },
-    { start: "Stopping abruptly at the edge of the forest, the footprints in the snow simply ended with no explanation", words: ["mystery", "silence"] },
-    { start: "Waking on a deserted beach with no memory of the night before, she found only a compass and a folded note", words: ["direction", "stranger"] },
-    { start: "Typing in the final line of code, the young programmer watched as the screen filled with a map she had never seen before", words: ["discovery", "digital"] },
-  ],
-
-  filterWords: [
-    `As the winter wind howled, she <hl-pink>felt</hl-pink> the bitter cold seeping through her thin wool coat.`,
-    `From his hiding spot in the rafters, he <hl-pink>saw</hl-pink> the guards patrolling the corridor below.`,
-    `Trembling in the darkness, the child <hl-pink>heard</hl-pink> heavy footsteps approaching the closet door.`,
-    `After scanning the ancient map, the archaeologist <hl-pink>realised</hl-pink> they had been digging in the wrong location.`,
-    `Looking at the dark clouds gathering on the horizon, the sailor <hl-pink>thought</hl-pink> a storm was inevitable.`,
-    `Staring at the locked gate, he <hl-pink>wondered</hl-pink> if he could climb over the rusted spikes.`,
-    `As the ground began to shake, she <hl-pink>knew</hl-pink> the volcano was about to erupt.`,
-    `Walking through the abandoned carnival, he <hl-pink>noticed</hl-pink> the carousel was slowly turning on its own.`,
-    `The old house <hl-pink>seemed</hl-pink> empty, with its broken windows and overgrown garden.`,
-    `She <hl-pink>looked</hl-pink> at the mysterious amulet pulsing with a faint blue light.`,
-    `The stranger in the corner <hl-pink>appeared</hl-pink> nervous, constantly checking his watch.`,
-    `Facing the dragon, the knight <hl-pink>decided</hl-pink> to drop his shield and wield his sword with both hands.`,
-    `Even from a distance, she <hl-pink>could</hl-pink> smell the smoke rising from the burning village.`,
-    `Trapped in the dungeon, the prisoner <hl-pink>wanted</hl-pink> to scream for help but had no voice left.`,
-    `Clutching the lottery ticket, he <hl-pink>hoped</hl-pink> his luck was about to change forever.`,
-    `He <hl-pink>felt</hl-pink> a sudden pain in his shoulder as the arrow grazed him.`,
-    `They <hl-pink>heard</hl-pink> the distinct sound of glass breaking in the room downstairs.`,
-    `He <hl-pink>realised</hl-pink> too late that the bridge was not stable enough to hold his weight.`,
-    `She <hl-pink>thought</hl-pink> the painting looked like it was watching her.`,
-    `She <hl-pink>knew</hl-pink> someone was following her through the crowded market.`,
-    `He <hl-pink>noticed</hl-pink> a small scar above the stranger's left eye.`,
-    `The forest <hl-pink>seemed</hl-pink> darker than usual as the sun began to set.`,
-    `The dog <hl-pink>appeared</hl-pink> hungry, its ribs showing through its matted fur.`,
-    `He <hl-pink>decided</hl-pink> to jump across the gap between the two buildings.`,
-    `She <hl-pink>could</hl-pink> feel the vibrations of the train approaching the station.`,
-    `He <hl-pink>wanted</hl-pink> to run, but his legs felt like lead.`,
-    `She <hl-pink>hoped</hl-pink> the rescue team would arrive before the tide came in.`,
-    `He <hl-pink>felt</hl-pink> a surge of excitement as he opened the envelope.`,
-    `She <hl-pink>wondered</hl-pink> if the legend of the ghost ship was actually true.`,
-    `He <hl-pink>knew</hl-pink> he had to keep moving if he wanted to survive the night.`,
-  ],
-};
+const data = {"openers": [{"text": "The substitute robot confiscated its own charger when the bell rang.", "type": "Start with WHEN — e.g. When..."}, {"text": "Mia caught the falling cake tin beside the judging table.", "type": "Start with WHERE — e.g. Beside..."}, {"text": "A possum climbed out of my bag during the spelling test.", "type": "Start with WHEN — e.g. During..."}, {"text": "I left the group chat because the joke had stopped being funny.", "type": "Start with WHY — e.g. Because..."}, {"text": "Leo walked onto the stage carrying a saucepan and a bow tie.", "type": "Start with a VERB-ing — e.g. Carrying..."}, {"text": "Nora checked the library trolley after finding a note in the book.", "type": "Start with WHEN — e.g. After..."}, {"text": "Our fastest runner stopped at the finish line to tie someone else’s shoelace.", "type": "Start with WHERE — e.g. At..."}, {"text": "The mayor paused because a Year 8 student had spotted the missing number.", "type": "Start with WHY — e.g. Because..."}, {"text": "Jai checked the compass beside the tent before admitting we were lost.", "type": "Start with WHERE — e.g. Beside..."}, {"text": "I wiped the bathroom mirror and uncovered a second message.", "type": "Start with a VERB-ing — e.g. Wiping..."}, {"text": "Our group hid the invention because nobody could agree on its name.", "type": "Start with WHY — e.g. Because..."}, {"text": "The usher opened the side gate when the crowd began to complain.", "type": "Start with WHEN — e.g. When..."}, {"text": "The new student changed the team’s plan after listening to us argue.", "type": "Start with WHEN — e.g. After..."}, {"text": "I opened the cheap camera beside the market stall and found a photograph of myself.", "type": "Start with WHERE — e.g. Beside..."}, {"text": "The dragon folded its wings because the classroom doorway was too narrow.", "type": "Start with WHY — e.g. Because..."}, {"text": "The scoreboard gave us nine extra points just before the final whistle.", "type": "Start with WHEN — e.g. Just before..."}, {"text": "We discovered the seedlings behind the bike shed before the first bell.", "type": "Start with WHERE — e.g. Behind..."}, {"text": "The apology grew longer because nobody wanted to name the mistake.", "type": "Start with WHY — e.g. Because..."}, {"text": "We found the missing file under a different name while the presentation timer counted down.", "type": "Start with WHEN — e.g. While..."}, {"text": "Our class rewrote the invitation after discovering who had been left out.", "type": "Start with WHEN — e.g. After..."}], "adjectives": ["The robot wheeled a trolley into the classroom and handed us a worksheet.", "A cake stood on a tray beside a handwritten sign.", "The possum sat on the desk beside an open lunchbox.", "My phone lay on the desk beneath the window.", "Leo placed a saucepan on the stage and adjusted his bow tie.", "A book lay open on the library trolley beside a folded note.", "The runners waited beside a line painted across the oval.", "The mayor stood beside a map of the park.", "The tent stood between two trees beside a creek.", "A message covered the mirror above the basin.", "The invention balanced on a table beside a pile of cables.", "The queue curved past the ticket booth and around a fence.", "The new student sat beside a chair piled with sports bags.", "A camera rested on a cloth beside a handwritten price tag.", "The dragon settled beside the desk and opened an envelope.", "The scoreboard glowed above the empty grandstand.", "Seedlings grew in containers beside the bike shed.", "A printed apology covered the noticeboard beside the office.", "A laptop sat on a table beside a disconnected projector.", "An invitation lay on the table beside a stack of envelopes."], "stopWords": [{"raw": "The robot <hl-red>was making a statement that was</hl-red> an apology because it <hl-red>was not able to</hl-red> pronounce anybody’s name."}, {"raw": "The icing <hl-red>was in the process of</hl-red> melting, so the judges <hl-red>made the decision to</hl-red> taste the cake first."}, {"raw": "There <hl-red>was a possum that was</hl-red> sitting on my spelling sheet, and it <hl-red>was causing</hl-red> a distraction."}, {"raw": "The message <hl-red>was repeated again</hl-red> in three chats, so I <hl-red>made a request for</hl-red> the original screenshot."}, {"raw": "Leo <hl-red>was of the opinion that</hl-red> his act needed <hl-red>an additional extra</hl-red> drum solo."}, {"raw": "Nora <hl-red>made an examination of</hl-red> the note <hl-red>in order to</hl-red> find out who had written it."}, {"raw": "The coach <hl-red>made an announcement that</hl-red> the race <hl-red>was going to</hl-red> start <hl-red>at this point in time</hl-red>."}, {"raw": "The mayor <hl-red>gave an explanation of</hl-red> the plan <hl-red>despite the fact that</hl-red> half the map was upside down."}, {"raw": "Jai <hl-red>was not able to</hl-red> find the campsite because the map <hl-red>was being held in an upside-down position</hl-red>."}, {"raw": "There <hl-red>was a message that was</hl-red> visible on the mirror, but I <hl-red>was not able to</hl-red> read the last word."}, {"raw": "Our invention <hl-red>was making a noise that was</hl-red> so loud that we <hl-red>made the decision to</hl-red> unplug it."}, {"raw": "The usher <hl-red>gave an explanation of</hl-red> the side entrance, but the crowd <hl-red>was not paying attention to</hl-red> her."}, {"raw": "The team <hl-red>was having a disagreement</hl-red> about the plan <hl-red>due to the fact that</hl-red> nobody had checked the rules."}, {"raw": "The seller <hl-red>made a claim that</hl-red> the camera <hl-red>was in a condition that was</hl-red> perfect."}, {"raw": "The dragon <hl-red>made an attempt to</hl-red> introduce itself, but its voice <hl-red>was at a volume that was</hl-red> too quiet."}, {"raw": "The referee <hl-red>carried out an investigation of</hl-red> the score <hl-red>before making a decision about</hl-red> the winner."}, {"raw": "We <hl-red>made a discovery that</hl-red> the containers <hl-red>were being used for the purpose of</hl-red> growing herbs."}, {"raw": "The notice <hl-red>made a statement that</hl-red> mistakes had occurred <hl-red>without giving an explanation of</hl-red> who would fix them."}, {"raw": "We <hl-red>made an attempt to</hl-red> open the file <hl-red>despite the fact that</hl-red> the screen <hl-red>was remaining</hl-red> blank."}, {"raw": "The committee <hl-red>made a revision to</hl-red> the invitation <hl-red>in order to</hl-red> include families who could not attend in person."}], "passive": ["During roll call, the name “Chair” <hl-orange>was announced</hl-orange> by the substitute robot.", "Before judging began, the collapsed cake <hl-orange>was rebuilt</hl-orange> by the youngest team.", "During the test, three biscuits <hl-orange>were stolen</hl-orange> by the visiting possum.", "Within a minute, the edited screenshot <hl-orange>was shared</hl-orange> by six classmates.", "After a tense pause, the saucepan solo <hl-orange>was applauded</hl-orange> by the entire front row.", "Inside the returned book, a folded note <hl-orange>was discovered</hl-orange> by Nora.", "Before the final race, the finish line <hl-orange>was moved</hl-orange> by the groundskeeper.", "At the town meeting, the missing bus stop <hl-orange>was pointed out</hl-orange> by a Year 8 student.", "Before sunset, the route home <hl-orange>was traced</hl-orange> by our youngest camper.", "Before the bell, the message on the mirror <hl-orange>was photographed</hl-orange> by Zara.", "Before the exhibition, the invention’s name <hl-orange>was changed</hl-orange> by its three designers.", "At the side entrance, a portable ramp <hl-orange>was unfolded</hl-orange> by the usher.", "Before training, the spare jersey <hl-orange>was offered</hl-orange> by our captain.", "At the market, the camera’s memory card <hl-orange>was removed</hl-orange> by the seller.", "During the dragon’s visit, the classroom smoke alarm <hl-orange>was silenced</hl-orange> by our teacher.", "After the final whistle, the extra points <hl-orange>were reported</hl-orange> by our captain.", "Before assembly, the new seedlings <hl-orange>were watered</hl-orange> by the caretaker.", "Before lunch, the vague apology <hl-orange>was replaced</hl-orange> by the school council.", "With two minutes left, the backup file <hl-orange>was opened</hl-orange> by our quietest teammate.", "Before the envelopes were sealed, the invitation <hl-orange>was revised</hl-orange> by our class."], "basicVerbs": ["Without bending its metal knees, the robot <hl-yellow>went</hl-yellow> under the desk to retrieve a pencil.", "As the cake slid towards the table’s edge, Mia <hl-yellow>got</hl-yellow> it with both hands.", "Ignoring the sandwich, the possum <hl-yellow>ate</hl-yellow> a biscuit in tiny bites.", "After checking the original message, Ava <hl-yellow>said</hl-yellow> in a quiet voice that the screenshot had been cropped.", "When the saucepan rolled off the stage, Leo <hl-yellow>ran</hl-yellow> after it, weaving between the judges’ chairs.", "Nora <hl-yellow>looked</hl-yellow> through the gap between two shelves without letting the librarian see her.", "On the final bend, Eli <hl-yellow>went</hl-yellow> past two runners in one sudden burst.", "Unable to read the tiny labels, the mayor <hl-yellow>moved</hl-yellow> the map closer to the front row.", "Trying not to wake the others, Jai <hl-yellow>walked</hl-yellow> between the tents with short, careful steps.", "As the letters began to fade, Zara <hl-yellow>wrote</hl-yellow> them quickly on the back of her hand.", "When the machine began shaking, Noor <hl-yellow>held</hl-yellow> the cable firmly between both hands.", "To get everybody’s attention, the usher <hl-yellow>said</hl-yellow> “Please leave this entrance clear” above the crowd’s chatter.", "When everyone else talked at once, the new student <hl-yellow>said</hl-yellow> quietly that the rules allowed a substitute.", "To read the scratched serial number, I <hl-yellow>looked</hl-yellow> closely at the underside of the camera.", "Trying to read the dragon’s letter, our teacher <hl-yellow>took</hl-yellow> it gently from the visitor’s claws.", "With the winning score still flashing, the captain <hl-yellow>went</hl-yellow> directly towards the referee.", "To avoid crushing the shoots, the caretaker <hl-yellow>put</hl-yellow> the watering can gently between two pots.", "During the meeting, Priya <hl-yellow>said</hl-yellow> plainly that the notice blamed everybody except its writers.", "Trying to keep the projector steady, Ben <hl-yellow>held</hl-yellow> the wobbling stand with both hands.", "To make room for the new details, Ana <hl-yellow>cut</hl-yellow> a narrow strip from the edge of the card."], "repetition": ["The <hl-blue>robot</hl-blue> asked us to work silently. The <hl-blue>robot</hl-blue> then played its start-up tune at full volume.", "The <hl-blue>judge</hl-blue> lifted her fork. The <hl-blue>judge</hl-blue> discovered that the fork was stuck in the icing.", "My <hl-blue>lunchbox</hl-blue> rattled under the desk. My <hl-blue>lunchbox</hl-blue> had never made that noise before.", "The <hl-blue>screenshot</hl-blue> left out the first sentence. The <hl-blue>screenshot</hl-blue> made an apology look like an insult.", "The <hl-blue>audience</hl-blue> waited for the song. The <hl-blue>audience</hl-blue> got a speech about kitchen safety instead.", "The <hl-blue>note</hl-blue> gave a date but no name. The <hl-blue>note</hl-blue> ended with the words “please come back”.", "The <hl-blue>runner</hl-blue> reached the line first. The <hl-blue>runner</hl-blue> then realised she had run one lap too few.", "The <hl-blue>map</hl-blue> showed a new playground. The <hl-blue>map</hl-blue> showed no path that a wheelchair could use.", "The <hl-blue>compass</hl-blue> pointed north. The <hl-blue>compass</hl-blue> disagreed with Jai’s confident announcement.", "The <hl-blue>message</hl-blue> looked like a threat. The <hl-blue>message</hl-blue> turned out to be the start of an apology.", "The <hl-blue>invention</hl-blue> could sort every pencil by colour. The <hl-blue>invention</hl-blue> could not stop eating the blue ones.", "The <hl-blue>queue</hl-blue> stretched around the building. The <hl-blue>queue</hl-blue> barely moved while the ticket printer jammed.", "The <hl-blue>captain</hl-blue> invited the new student to sit down. The <hl-blue>captain</hl-blue> moved her own bag off the only spare chair.", "The <hl-blue>camera</hl-blue> cost five dollars. The <hl-blue>camera</hl-blue> contained a photograph worth far more to its owner.", "The <hl-blue>dragon</hl-blue> asked for a glass of water. The <hl-blue>dragon</hl-blue> apologised for boiling it.", "The <hl-blue>scoreboard</hl-blue> gave us nine extra points. The <hl-blue>scoreboard</hl-blue> made our team look unbeatable.", "The <hl-blue>garden</hl-blue> appeared overnight. The <hl-blue>garden</hl-blue> had clearly taken somebody weeks to prepare.", "The <hl-blue>apology</hl-blue> filled a page. The <hl-blue>apology</hl-blue> never mentioned the cancelled excursion.", "The <hl-blue>file</hl-blue> had vanished from the desktop. The <hl-blue>file</hl-blue> had been saved under the name “final_FINAL_really”.", "The <hl-blue>invitation</hl-blue> promised a celebration for everyone. The <hl-blue>invitation</hl-blue> gave no way to join from home."], "scrambled": [["Although the instructions looked simple", "the robot folded our worksheets into hats", "while we watched", "because somebody had accidentally selected", "the party setting"], ["When the cake collapsed", "our team built a volcano from the pieces", "and hid the crack", "beneath a river of icing", "before the judges arrived"], ["With one biscuit in each paw", "the possum stared at our teacher", "while I searched my bag", "for the note from Mum", "that might explain our visitor"], ["Although nobody admitted sending the screenshot", "Ava found the original message", "and posted it beneath the joke", "so that everyone could see", "what had been left out"], ["Before Leo could introduce his act", "the saucepan rolled off the stage", "and landed beside the judge", "who had just written", "“excellent control” on the score sheet"], ["After finding a note between the pages", "Nora returned to the library", "and checked the empty shelf", "where the book had stood", "only an hour earlier"], ["Although the ribbon had fallen onto the grass", "the runners kept sprinting", "towards the two teachers", "who were arguing about", "where the finish line belonged"], ["When the mayor invited questions", "Sam raised the map above his head", "and pointed to the playground", "which could only be reached", "by climbing a flight of steps"], ["With the map spread across his knees", "Jai studied the bend in the creek", "until he finally admitted", "that the campsite marked in red", "was on the other side of the hill"], ["As the steam faded from the mirror", "a second line appeared", "beneath the first message", "and changed the meaning", "of every word we had read"], ["Although the machine sorted pencils perfectly", "Noor refused to switch it on", "until her teammates agreed", "to include the caretaker’s name", "beside their own on the display"], ["Before the crowd could complain again", "the usher opened the side gate", "and unfolded a ramp", "which had been hidden", "behind the stack of empty crates"], ["While the others argued over positions", "the new student read the rules", "and found the one sentence", "that allowed our injured captain", "to stay involved in the game"], ["When I switched on the second-hand camera", "a familiar face filled the screen", "and I turned towards the seller", "who was already packing", "the empty boxes beneath his stall"], ["After folding its wings against its back", "the dragon squeezed through the doorway", "and handed our teacher a letter", "which had been addressed", "to “whoever makes the rules”"], ["Although the crowd had started cheering", "our captain walked towards the referee", "and pointed to the scoreboard", "where nine extra points", "had appeared beside our name"], ["Behind the bike shed", "we found twenty pots of herbs", "with handwritten labels", "that matched the handwriting", "on the caretaker’s toolbox"], ["After reading the apology aloud", "Priya crossed out three paragraphs", "and replaced them with one sentence", "that explained the mistake", "and promised a refund"], ["While the presentation timer counted down", "Ben checked the shared folder", "and found our missing slides", "beneath a file name", "that nobody wanted to admit choosing"], ["Before sealing the final envelope", "Ana read the invitation once more", "and added a way to join online", "so that the celebration could include", "the families who lived too far away"]], "finishTheSentence": [{"start": "Before the robot could explain its homework policy,", "words": ["charger", "excuse"]}, {"start": "Although our cake now looked like a landslide,", "words": ["prize", "fork"]}, {"start": "Instead of returning my pencil,", "words": ["paw", "bargain"]}, {"start": "After everyone had reacted to the screenshot,", "words": ["context", "silence"]}, {"start": "Just as the audience began to clap,", "words": ["lid", "encore"]}, {"start": "Beneath the ordinary return-date stamp,", "words": ["message", "choice"]}, {"start": "With the finish line behind us and the whistle still blowing,", "words": ["lap", "protest"]}, {"start": "Instead of answering the easiest question,", "words": ["access", "promise"]}, {"start": "Although Jai insisted the shortcut was familiar,", "words": ["compass", "confession"]}, {"start": "Once I uncovered the final word,", "words": ["apology", "reflection"]}, {"start": "Just before the judges reached our table,", "words": ["credit", "cable"]}, {"start": "After I stopped counting who had entered first,", "words": ["ramp", "assumption"]}, {"start": "Instead of asking where the new student came from,", "words": ["jersey", "invitation"]}, {"start": "Although the camera belonged to me now,", "words": ["privacy", "bargain"]}, {"start": "Before we could ask why it had come,", "words": ["appointment", "sneeze"]}, {"start": "With the trophy already in my hands,", "words": ["error", "honesty"]}, {"start": "Although the sign thanked our class,", "words": ["seedling", "credit"]}, {"start": "Once we removed “if anyone was upset”,", "words": ["responsibility", "refund"]}, {"start": "When the projector finally lit up,", "words": ["backup", "relief"]}, {"start": "Rather than printing the invitation again,", "words": ["distance", "welcome"]}], "filterWords": ["I <hl-pink>heard</hl-pink> the robot’s wheels squeal as it tried to turn between two desks.", "Mia <hl-pink>saw</hl-pink> a trail of icing stretch from the cake tin to the principal’s sleeve.", "I <hl-pink>felt</hl-pink> tiny claws prick my shoulder as the possum climbed towards my lunch.", "I <hl-pink>noticed</hl-pink> three laughing reactions disappear as Ava posted the full message.", "I <hl-pink>heard</hl-pink> a saucepan lid rattle down the steps during Leo’s dramatic pause.", "Nora <hl-pink>saw</hl-pink> the same blue handwriting on the librarian’s shopping list.", "I <hl-pink>felt</hl-pink> wet grass slap my ankles as I took the inside bend.", "Sam <hl-pink>noticed</hl-pink> the mayor cover the stairway symbol with a sticky note.", "I <hl-pink>heard</hl-pink> water rush over the rocks beyond the tent.", "Zara <hl-pink>saw</hl-pink> a fingerprint interrupt the last letter on the mirror.", "I <hl-pink>felt</hl-pink> the table vibrate as the machine swallowed another pencil.", "I <hl-pink>noticed</hl-pink> the usher steady the ramp with her foot.", "I <hl-pink>saw</hl-pink> the new student’s fingers loosen around the strap of her bag.", "I <hl-pink>heard</hl-pink> the camera’s shutter click even after I removed the battery.", "I <hl-pink>felt</hl-pink> warm air lift the hair on my arms as the dragon sighed.", "I <hl-pink>saw</hl-pink> the captain turn away from the trophy and raise her hand.", "I <hl-pink>noticed</hl-pink> fresh soil cling to the caretaker’s sleeves.", "I <hl-pink>heard</hl-pink> the council chairs scrape backwards when Priya asked who had approved the notice.", "I <hl-pink>felt</hl-pink> the projector’s warm fan blow against my wrist as I reconnected the cable.", "I <hl-pink>saw</hl-pink> Ana slide an extra chair beside the laptop before the celebration began."]};
 
 const ACTIVITIES = [
   {
@@ -637,7 +362,7 @@ const ACTIVITIES = [
   },
   {
     id: 2, label: "Detail Expansion", accent: "var(--c2)",
-    instruction: "Add 5 strong adjectives to this sentence to create a more vivid image.",
+    instruction: "Add 5 purposeful adjectives to practise detail expansion. Make them fit the scene; avoid repeating the same detail.",
     render(item) {
       return `<div class="content-text">"${item}"</div>`;
     },
@@ -661,7 +386,7 @@ const ACTIVITIES = [
   },
   {
     id: 5, label: "Power Verbs", accent: "var(--c5)",
-    instruction: "Replace the highlighted weak verb with a stronger, more precise synonym.",
+    instruction: "Replace the highlighted verb with a more precise one that fits the action. Keep the meaning and tense.",
     render(item) {
       return `<div class="content-text">"${renderHL(item)}"</div>`;
     },
@@ -677,7 +402,7 @@ const ACTIVITIES = [
   },
   {
     id: 7, label: "Reconstruction", accent: "var(--c7)",
-    instruction: "Reorder these five phrases to form one coherent, complex sentence.",
+    instruction: "Reorder these five phrases into one coherent sentence. Add capitals and punctuation; keep every phrase.",
     render(item) {
       const shuffled = shuffle([...item]);
       return `<div class="phrase-pills">${shuffled.map((p,i) => `<span class="ppill"><span class="ppill-num">${i+1}.</span>${p}</span>`).join('')}</div>`;
@@ -725,60 +450,54 @@ function renderHL(str) {
 // Week plan: for each of 20 weeks, one index per activity (0-based).
 // Chosen to avoid iffy content and give variety across week types.
 // Format: [opener, adjective, stopWords, passive, basicVerbs, repetition, scrambled, finish, filter]
-const WEEK_PLANS = [
-  [ 0,  0,  0,  0,  0,  0,  0,  0,  0], // Week 1
-  [ 3,  2,  4,  6,  3,  3,  1,  1,  1], // Week 2
-  [ 6,  4,  7, 13,  6,  6,  2,  2,  2], // Week 3
-  [10,  6, 10, 16,  9,  9,  3,  3,  3], // Week 4
-  [13,  8, 13,  2, 12, 12,  4,  4,  4], // Week 5
-  [16, 10, 16,  5, 15, 15,  5,  5,  5], // Week 6
-  [19, 12,  1,  8, 18, 18,  6,  6,  6], // Week 7
-  [22, 14,  3, 11, 21, 21,  7,  7,  7], // Week 8
-  [25, 16,  6, 14, 24, 24,  8,  8,  8], // Week 9
-  [28, 18,  9, 17, 27, 27,  9,  9,  9], // Week 10
-  [ 1, 20, 11, 19,  1,  1, 10, 10, 10], // Week 11
-  [ 4, 22, 14, 21,  4,  4, 11, 11, 11], // Week 12
-  [ 7, 24, 17, 23,  7,  7, 12, 12, 12], // Week 13
-  [11, 26, 20, 25, 10, 10, 13, 13, 13], // Week 14
-  [14, 27,  2, 27, 13, 13, 14, 14, 14], // Week 15
-  [17,  1,  5,  1, 16, 16, 15, 15, 15], // Week 16
-  [20,  3,  8,  3, 19, 19, 16, 16, 16], // Week 17
-  [23,  5, 12,  7, 22, 22, 17, 17, 17], // Week 18
-  [26,  9, 15, 10, 25, 20, 18, 18, 18], // Week 19
-  [29, 11, 18, 12, 28, 23, 19, 19, 19], // Week 20
-];
+const WEEK_PLANS = [[0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 1], [2, 2, 2, 2, 2, 2, 2, 2, 2], [3, 3, 3, 3, 3, 3, 3, 3, 3], [4, 4, 4, 4, 4, 4, 4, 4, 4], [5, 5, 5, 5, 5, 5, 5, 5, 5], [6, 6, 6, 6, 6, 6, 6, 6, 6], [7, 7, 7, 7, 7, 7, 7, 7, 7], [8, 8, 8, 8, 8, 8, 8, 8, 8], [9, 9, 9, 9, 9, 9, 9, 9, 9], [10, 10, 10, 10, 10, 10, 10, 10, 10], [11, 11, 11, 11, 11, 11, 11, 11, 11], [12, 12, 12, 12, 12, 12, 12, 12, 12], [13, 13, 13, 13, 13, 13, 13, 13, 13], [14, 14, 14, 14, 14, 14, 14, 14, 14], [15, 15, 15, 15, 15, 15, 15, 15, 15], [16, 16, 16, 16, 16, 16, 16, 16, 16], [17, 17, 17, 17, 17, 17, 17, 17, 17], [18, 18, 18, 18, 18, 18, 18, 18, 18], [19, 19, 19, 19, 19, 19, 19, 19, 19]];
 
 function weekIndex() {
   return parseInt(document.getElementById('week-select').value) - 1;
 }
 
+let currentItems = [];
 function generateWorksheet() {
   const grid = document.getElementById('grid');
   const w = weekIndex();
   const plan = WEEK_PLANS[w];
   const keys = ['openers','adjectives','stopWords','passive','basicVerbs','repetition','scrambled','finishTheSentence','filterWords'];
+  currentItems = [];
   grid.innerHTML = ACTIVITIES.map((act, i) => {
     const arr = data[keys[i]];
     const item = arr[plan[i] % arr.length];
+    const rendered = act.render(item);
+    currentItems.push(rendered);
     return `
       <div class="card" style="--accent:${act.accent}">
         <div class="card-head">
-          <span class="card-title">${act.label}</span>
+          <button type="button" class="card-title focus-task" data-task="${i}" aria-label="Enlarge ${act.label}">${act.label}<span class="enlarge-label"> ↗</span></button>
         </div>
         <div class="card-body">
           <p class="instruction">${act.instruction}</p>
-          ${act.render(item)}
+          ${rendered}
         </div>
       </div>`;
   }).join('');
 }
 
 window.onload = generateWorksheet;
+document.getElementById('grid').addEventListener('click', event => {
+  const button = event.target.closest('[data-task]');
+  if (!button) return;
+  const index = Number(button.dataset.task), act = ACTIVITIES[index];
+  const target = document.getElementById('focused-task');
+  target.style.setProperty('--accent', act.accent);
+  target.innerHTML = `<h2>${act.label}</h2><p class="instruction">${act.instruction}</p>${currentItems[index]}`;
+  document.getElementById('task-dialog').showModal();
+});
+document.getElementById('close-task').onclick = () => document.getElementById('task-dialog').close();
 
 // ── TIMER ──
 let timerInterval = null;
 let timerSeconds = 120;
 let beepPlayed = false;
+let timerDeadline = 0;
 
 const display   = () => document.getElementById('timer-display');
 const minsInput = () => document.getElementById('timer-mins');
@@ -808,8 +527,9 @@ function timerStart() {
   beepPlayed = false;
   btnGo().style.display  = 'none';
   btnStop().style.display = '';
+  timerDeadline = Date.now() + timerSeconds * 1000;
   timerInterval = setInterval(() => {
-    timerSeconds--;
+    timerSeconds = Math.max(0, Math.ceil((timerDeadline - Date.now()) / 1000));
     timerRender();
     if (timerSeconds <= 0) {
       clearInterval(timerInterval);
@@ -830,7 +550,9 @@ function timerStop() {
 function timerReset() {
   clearInterval(timerInterval);
   timerInterval = null;
-  timerSeconds = (parseInt(minsInput().value) || 2) * 60;
+  const minutes = Math.max(1, Math.min(20, parseInt(minsInput().value) || 2));
+  minsInput().value = minutes;
+  timerSeconds = minutes * 60;
   beepPlayed = false;
   display().classList.remove('urgent','flashing');
   timerRender();
@@ -876,3 +598,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
